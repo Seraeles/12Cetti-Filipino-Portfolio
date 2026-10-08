@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epilogo - Abecia | Portfolio</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:ital,wght@0,400;0,600;0,700;1,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fcfcfc;
+            color: #111111;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            animation: fadeInPage 0.4s ease-out forwards;
+            opacity: 0;
+            position: relative;
+        }
+
+        body.fade-out {
+            animation: fadeOutPage 0.3s ease-in forwards;
+        }
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeOutPage {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+
+        /* Canvas Overlay for Dynamic Blocky Yellow Particles */
+        #particleCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* Clean Split Title Effect (UST Style - Yellow/Black) */
+        .ust-split-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-style: italic;
+            text-transform: uppercase;
+            display: inline-block;
+            letter-spacing: 1px;
+            line-height: 1.1;
+            background: linear-gradient(to bottom, #eab308 0%, #eab308 50%, #111111 50%, #111111 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .app-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Content Area with Hexagon Background Pattern */
+        .content-area {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            position: relative;
+            overflow-y: auto;
+            z-index: 3;
+            
+            background-image: linear-gradient(rgba(252, 252, 252, 0.94), rgba(252, 252, 252, 0.94)), url('hexagon-bg.jpg');
+            background-size: 450px;
+            background-repeat: repeat;
+            background-position: center;
+        }
+
+        .epilogo-page-container {
+            max-width: 800px;
+            width: 100%;
+            background: #ffffff;
+            border: 3px solid #111111;
+            box-shadow: 10px 10px 0px #111111;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            margin: auto 0;
+        }
+
+        .back-nav-btn {
+            align-self: flex-start;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #111111;
+            background: #ffffff;
+            border: 2px solid #111111;
+            padding: 8px 16px;
+            box-shadow: 3px 3px 0px #111111;
+            transition: all 0.15s ease;
+            margin-bottom: 25px;
+        }
+
+        .back-nav-btn:hover {
+            background: #111111;
+            color: #ffffff;
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0px #111111;
+        }
+
+        .quote-banner-box {
+            background: #18181b;
+            border: 3px solid #111111;
+            box-shadow: 6px 6px 0px #111111;
+            padding: 24px;
+            text-align: center;
+            color: #f4f4f5;
+            font-style: italic;
+            font-size: 1.15rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .epilogo-body-text {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: #333333;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Dynamic Animated Particle Canvas -->
+    <canvas id="particleCanvas"></canvas>
+
+    <div class="app-container">
+        <div class="content-area">
+            
+            <div class="epilogo-page-container">
+                <!-- Return Button back to main portfolio page -->
+                <a href="index.html#epilogo" onclick="transitionToPage(event, 'index.html#epilogo')" class="back-nav-btn">
+                    &larr; Bumalik sa Portfolio
+                </a>
+
+                <!-- Header Name -->
+                <div style="margin-bottom: 20px;">
+                    <h2 class="ust-split-title" style="font-size: 2.6rem; margin-bottom: 4px;">
+                        Abecia
+                    </h2>
+                    <div style="font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; font-weight: 700; color: #d97706; text-transform: uppercase;">
+                        Epilogo &mdash; Grade 12 Cetti
+                    </div>
+                </div>
+
+                <!-- One-Liner Quote Banner (Updated to Filipino) -->
+                <div class="quote-banner-box">
+                    &ldquo;Pagpapakumbaba at patuloy na pagkatuto&mdash;ang Senior High School ay isang di-matatawarang paglalakbay.&rdquo;
+                </div>
+
+                <!-- Full Reflection Body Text -->
+                <div class="epilogo-body-text">
+                    <p>
+                        Sa simula, nagdala ng matinding pagsubok ang asignaturang Filipino 201 dahil sa mga hindi inaasahang pagkakataon at kawalan ng regular na klase sa loob ng ilang linggo. Ang pakiramdam na naiwan sa mga aralin ay nagdulot ng labis na pag-aalala, ngunit ang pagdating ng aming bagong guro ang naging tulay upang muli kaming makahabol at mas higit pang manguna sa aming talakayan. Sa pamamagitan ng maayos ng paggabay, natutuhan ng mag-aaral ang mga batayang kasanayan sa pagsusuri ng teksto at pagbuo ng bionote. Ang karanasang ito ay nagturo ng kahalagahan ng katatagan, disiplina, at masusing paglalahad ng sarili at ng mga ideya.
+                    </p>
+                    <p>
+                        Habang nagpapatuloy ang semestre, naging mas madali at malinaw ang pag-unawa sa mga praktikal na sulatin tulad ng memorandum, adyenda, at katitikan ng pulong. Ang pagbuo naman ng panukalang proyekto ay nagbigay ng malalim na kaalaman sa kung paano maglatag ng mga organisadong solusyon para sa mga hinaharap na hamon. Napatunayan ng mag-aaral na ang mga kasanayang ito sa pormal na pagsulat at pag-oorganisa ng impormasyon ay hindi lamang para sa silid-aralan, kundi mga totoong kasanayang magagamit niya sa kaniyang hinaharap na karera—lalo na sa pagbuo ng mga propesyonal na portfolio at pormal na komunikasyon.
+                    </p>
+                    <p>
+                        Sa pangkalahatan, ang paglalakbay sa Ika-12 Baitang sa asignaturang Filipino ay naging isang napakahalaga at hindi mapapalitang karanasan. Sa kabila ng mga paunang hamon, ang mga aral na nakuha ay nagbigay-daan sa mas malalim na pagpapahalaga sa wikang Filipino at sa kakayahan ng bawat mag-aaral na malampasan ang anumang balakid tungo sa tagumpay.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JavaScript for Animations -->
+    <script>
+        function transitionToPage(event, url) {
+            event.preventDefault();
+            document.body.classList.add('fade-out');
+            setTimeout(() => {
+                window.location.href = url;
+            }, 300);
+        }
+
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const particleColors = ['#facc15', '#eab308', '#fbbf24', '#d97706', '#e2e8f0'];
+
+        class DynamicParticle {
+            constructor() {
+                this.reset(true);
+            }
+
+            reset(initial = false) {
+                this.x = Math.random() * width;
+                this.y = initial ? Math.random() * height : height + Math.random() * 80;
+                this.w = Math.random() * 30 + 12;
+                this.h = Math.random() * 10 + 4;
+                this.speedY = Math.random() * 1.5 + 0.6;
+                this.speedX = Math.random() * 0.5 + 0.2;
+                this.color = particleColors[Math.floor(Math.random() * particleColors.length)];
+                this.opacity = Math.random() * 0.55 + 0.25;
+                this.type = Math.floor(Math.random() * 3);
+            }
+
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX;
+                if (this.y < -50 || this.x > width + 50) {
+                    this.reset(false);
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.opacity;
+                ctx.translate(this.x, this.y);
+
+                if (this.type === 0) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.lineTo(this.w, 0);
+                    ctx.lineTo(this.w - 12, this.h);
+                    ctx.lineTo(-12, this.h);
+                    ctx.closePath();
+                    ctx.fill();
+                } else if (this.type === 1) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.lineTo(this.w / 1.5, -this.h / 1.2);
+                    ctx.lineTo(this.w, this.h / 2);
+                    ctx.closePath();
+                    ctx.fill();
+                } else {
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.lineTo(this.w * 1.8, -this.h * 0.5);
+                    ctx.lineTo(this.w * 1.8 - 6, 2);
+                    ctx.lineTo(-6, 2);
+                    ctx.closePath();
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        const particles = Array.from({ length: 45 }, () => new DynamicParticle());
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        animateParticles();
+    </script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epilogo - Del Rosario | Portfolio</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:ital,wght@0,400;0,600;0,700;1,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fcfcfc;
+            color: #111111;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            animation: fadeInPage 0.4s ease-out forwards;
+            opacity: 0;
+            position: relative;
+        }
+
+        body.fade-out {
+            animation: fadeOutPage 0.3s ease-in forwards;
+        }
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeOutPage {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+
+        /* Canvas Overlay for Dynamic Particles */
+        #particleCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* Clean Split Title Effect (UST Style - Yellow/Black) */
+        .ust-split-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-style: italic;
+            text-transform: uppercase;
+            display: inline-block;
+            letter-spacing: 1px;
+            line-height: 1.1;
+            background: linear-gradient(to bottom, #eab308 0%, #eab308 50%, #111111 50%, #111111 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .app-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content-area {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            position: relative;
+            overflow-y: auto;
+            z-index: 3;
+            
+            background-image: linear-gradient(rgba(252, 252, 252, 0.94), rgba(252, 252, 252, 0.94)), url('hexagon-bg.jpg');
+            background-size: 450px;
+            background-repeat: repeat;
+            background-position: center;
+        }
+
+        .epilogo-page-container {
+            max-width: 800px;
+            width: 100%;
+            background: #ffffff;
+            border: 3px solid #111111;
+            box-shadow: 10px 10px 0px #111111;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            margin: auto 0;
+        }
+
+        .back-nav-btn {
+            align-self: flex-start;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #111111;
+            background: #ffffff;
+            border: 2px solid #111111;
+            padding: 8px 16px;
+            box-shadow: 3px 3px 0px #111111;
+            transition: all 0.15s ease;
+            margin-bottom: 25px;
+        }
+
+        .back-nav-btn:hover {
+            background: #111111;
+            color: #ffffff;
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0px #111111;
+        }
+
+        .quote-banner-box {
+            background: #18181b;
+            border: 3px solid #111111;
+            box-shadow: 6px 6px 0px #111111;
+            padding: 24px;
+            text-align: center;
+            color: #f4f4f5;
+            font-style: italic;
+            font-size: 1.15rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .epilogo-body-text {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: #333333;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="particleCanvas"></canvas>
+
+    <div class="app-container">
+        <div class="content-area">
+            <div class="epilogo-page-container">
+                <a href="index.html#epilogo" onclick="transitionToPage(event, 'index.html#epilogo')" class="back-nav-btn">
+                    &larr; Bumalik sa Portfolio
+                </a>
+
+                <div style="margin-bottom: 20px;">
+                    <h2 class="ust-split-title" style="font-size: 2.6rem; margin-bottom: 4px;">
+                        Del Rosario
+                    </h2>
+                    <div style="font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; font-weight: 700; color: #d97706; text-transform: uppercase;">
+                        Epilogo &mdash; Grade 12 Cetti
+                    </div>
+                </div>
+
+                <div class="quote-banner-box">
+                    &ldquo;Maaaring matapos na ang aming klase sa Filipino, ngunit ang mga kasanayan at aral na natutuhan ko rito ay patuloy kong magagamit saan man ako mapunta.&rdquo;
+                </div>
+
+                <div class="epilogo-body-text">
+                    <p>
+                        Sa pagtatapos ng aming pag-aaral sa asignaturang Filipino, masasabi kong marami akong natutuhan na maaari kong magamit hindi lamang sa paaralan kundi pati sa aking pang-araw-araw na buhay. Sa bawat gawain, pagsulat, at talakayan, mas naunawaan ko ang halaga ng paggamit ng wikang Filipino bilang paraan ng malinaw na pagpapahayag ng aking mga ideya, saloobin, at karanasan. Bilang isang Grade 12 student, naging mahalaga rin sa akin ang asignaturang ito dahil naging bahagi ito ng aking huling taon sa senior high school.
+                    </p>
+                    <p>
+                        Sa pagdaan ng mga aralin, natutuhan kong ang mahusay na pagsusulat ay nangangailangan ng panahon, pag-iisip, at paulit-ulit na pagwawasto. Hindi sapat na matapos lamang ang isang gawain; mahalaga ring suriin kung malinaw, maayos, at tama ang nilalaman nito. Nakatulong din ang mga aktibidad upang mas maging responsable ako sa aking mga gawain at mas magkaroon ng kumpiyansa sa pagpapahayag ng aking mga ideya. Bukod dito, natutuhan ko rin ang kahalagahan ng pakikipagtulungan, lalo na sa mga gawaing nangangailangan ng ambag at koordinasyon ng bawat isa.
+                    </p>
+                    <p>
+                        Ngayong isa na ito sa mga huling yugto ng aking Grade 12 journey, masasabi kong ang Filipino ay naging higit pa sa isang asignatura. Naging daan ito upang mas mapaunlad ko ang aking kakayahan sa komunikasyon at pagsusulat. Sa pagtatapos ng senior high school, dala ko ang mga aral na natutuhan ko at gagamitin ko ang mga ito sa susunod na yugto ng aking pag-aaral at buhay. Maaaring matapos na ang aming klase sa Filipino, ngunit ang mga kasanayan at aral na natutuhan ko rito ay patuloy kong magagamit saan man ako mapunta.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function transitionToPage(event, url) {
+            event.preventDefault();
+            document.body.classList.add('fade-out');
+            setTimeout(() => { window.location.href = url; }, 300);
+        }
+
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const particleColors = ['#facc15', '#eab308', '#fbbf24', '#d97706', '#e2e8f0'];
+
+        class DynamicParticle {
+            constructor() { this.reset(true); }
+            reset(initial = false) {
+                this.x = Math.random() * width;
+                this.y = initial ? Math.random() * height : height + Math.random() * 80;
+                this.w = Math.random() * 30 + 12;
+                this.h = Math.random() * 10 + 4;
+                this.speedY = Math.random() * 1.5 + 0.6;
+                this.speedX = Math.random() * 0.5 + 0.2;
+                this.color = particleColors[Math.floor(Math.random() * particleColors.length)];
+                this.opacity = Math.random() * 0.55 + 0.25;
+                this.type = Math.floor(Math.random() * 3);
+            }
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX;
+                if (this.y < -50 || this.x > width + 50) { this.reset(false); }
+            }
+            draw() {
+                ctx.save();
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.opacity;
+                ctx.translate(this.x, this.y);
+                if (this.type === 0) {
+                    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(this.w, 0); ctx.lineTo(this.w - 12, this.h); ctx.lineTo(-12, this.h); ctx.closePath(); ctx.fill();
+                } else if (this.type === 1) {
+                    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(this.w / 1.5, -this.h / 1.2); ctx.lineTo(this.w, this.h / 2); ctx.closePath(); ctx.fill();
+                } else {
+                    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(this.w * 1.8, -this.h * 0.5); ctx.lineTo(this.w * 1.8 - 6, 2); ctx.lineTo(-6, 2); ctx.closePath(); ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        const particles = Array.from({ length: 45 }, () => new DynamicParticle());
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+    </script>
+</body>
+</html>

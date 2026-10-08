@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scaffold 3 - Panukalang Proyekto</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:ital,wght@0,400;0,600;0,700;1,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fcfcfc;
+            color: #111111;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            animation: fadeInPage 0.4s ease-out forwards;
+            opacity: 0;
+            position: relative;
+        }
+
+        body.fade-out {
+            animation: fadeOutPage 0.3s ease-in forwards;
+        }
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeOutPage {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+
+        /* Canvas Overlay for Dynamic Blocky Yellow Particles */
+        #particleCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* TABS Custom Typography */
+        .tabs-split-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-style: italic;
+            font-size: 2.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            display: inline-block;
+            line-height: 1.1;
+            background: linear-gradient(to bottom, #ffffff 0%, #ffffff 50%, #111111 50%, #111111 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            z-index: 20;
+            -webkit-text-stroke: 1.2px #111111;
+            filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.2));
+        }
+
+        /* Main App Layout */
+        .app-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            border-right: 2px solid #111111;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 0 0 40px 0;
+            z-index: 10;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-area {
+            position: relative;
+            z-index: 20;
+            height: 140px;
+            width: 100%;
+            overflow: hidden;
+            border-bottom: 3px solid #111111;
+            display: flex;
+            align-items: center;
+            padding-left: 24px;
+        }
+
+        .corner-graphic-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: auto 0;
+            padding: 0 30px;
+            position: relative;
+            z-index: 12;
+        }
+
+        .nav-link {
+            font-family: 'Space Grotesk', sans-serif;
+            text-decoration: none;
+            color: #111111;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 8px 12px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: #111111;
+            color: #ffffff;
+        }
+
+        .sidebar-footer {
+            border-top: 2px solid #111111;
+            padding: 20px 30px 0 30px;
+            position: relative;
+            z-index: 12;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .social-box {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #111111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: #111111;
+        }
+
+        .social-box:hover {
+            background: #111111;
+            color: #ffffff;
+        }
+
+        .copyright {
+            font-size: 0.75rem;
+            color: #666666;
+            line-height: 1.4;
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Top Navigation Header & Back Button */
+        .top-action-bar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+
+        .back-btn {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #111111;
+            background: #ffffff;
+            border: 3px solid #111111;
+            padding: 8px 18px;
+            box-shadow: 4px 4px 0px #111111;
+            transition: all 0.15s ease;
+        }
+
+        .back-btn:hover {
+            background: #111111;
+            color: #ffffff;
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #111111;
+        }
+
+        /* Proposal Interactive Container */
+        .proposal-container {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+        }
+
+        /* Interactive Tabs Navigation Header */
+        .proposal-tabs-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+            flex-shrink: 0;
+        }
+
+        .proposal-tab {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            background: #ffffff;
+            color: #111111;
+            border: 2px solid #111111;
+            padding: 8px 12px;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px #111111;
+            transition: all 0.15s ease;
+        }
+
+        .proposal-tab:hover {
+            background: #f4f4f5;
+            transform: translate(-1px, -1px);
+            box-shadow: 4px 4px 0px #111111;
+        }
+
+        .proposal-tab.active {
+            background: #111111;
+            color: #eab308;
+            box-shadow: 3px 3px 0px #eab308;
+            border-color: #111111;
+        }
+
+        /* Main Document Box for Sections */
+        .proposal-content-box {
+            flex: 1;
+            background: #ffffff;
+            border: 3px solid #111111;
+            box-shadow: 8px 8px 0px #111111;
+            display: flex;
+            flex-direction: column;
+            padding: 30px;
+            overflow-y: auto;
+            min-height: 0;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            border-bottom: 3px solid #111111;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            color: #111111;
+        }
+
+        .section-body {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: #222222;
+        }
+
+        .section-body p {
+            margin-bottom: 14px;
+        }
+        
+        .section-body h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            color: #111111;
+        }
+
+        .section-body ol, .section-body ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .section-body li {
+            margin-bottom: 8px;
+        }
+
+        /* Budget Table Style */
+        .budget-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            border: 3px solid #111111;
+            box-shadow: 4px 4px 0px #111111;
+            font-size: 0.9rem;
+        }
+
+        .budget-table th, .budget-table td {
+            border: 2px solid #111111;
+            padding: 10px 14px;
+            text-align: left;
+        }
+
+        .budget-table th {
+            background-color: #111111;
+            color: #ffffff;
+            font-family: 'Space Grotesk', sans-serif;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .budget-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Image Gallery for Lakip */
+        .image-gallery {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+
+        .image-card {
+            border: 3px solid #111111;
+            padding: 10px;
+            background: #ffffff;
+            box-shadow: 4px 4px 0px #111111;
+            max-width: 320px;
+        }
+
+        .image-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border: 1px solid #111111;
+        }
+
+        /* Tab Content Panel Control */
+        .tab-panel {
+            display: none;
+            animation: fadeInPanel 0.25s ease-out forwards;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeInPanel {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom Scrollbar for Content Box */
+        .proposal-content-box::-webkit-scrollbar {
+            width: 8px;
+        }
+        .proposal-content-box::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-left: 2px solid #111111;
+        }
+        .proposal-content-box::-webkit-scrollbar-thumb {
+            background: #111111;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Dynamic Animated Particle Canvas -->
+    <canvas id="particleCanvas"></canvas>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="logo-area">
+                <img src="yellow.jpg" alt="Yellow Graphic" class="corner-graphic-img">
+                <h1 class="tabs-split-title">TABS</h1>
+            </div>
+
+            <div class="nav-links">
+                <a href="index.html#pabalat" onclick="transitionToPage(event, 'index.html#pabalat')" class="nav-link">Pabalat</a>
+                <a href="index.html#pamagating" onclick="transitionToPage(event, 'index.html#pamagating')" class="nav-link">Pamagating Pahina</a>
+                <a href="index.html#prologo" onclick="transitionToPage(event, 'index.html#prologo')" class="nav-link">Prologo</a>
+                <a href="index.html#talaan" onclick="transitionToPage(event, 'index.html#talaan')" class="nav-link">Talaan ng Nilalaman</a>
+                <a href="index.html#sulatin" onclick="transitionToPage(event, 'index.html#sulatin')" class="nav-link active">Mga Sulatin</a>
+                <a href="index.html#epilogo" onclick="transitionToPage(event, 'index.html#epilogo')" class="nav-link">Epilogo</a>
+                <a href="index.html#cv-section" onclick="transitionToPage(event, 'index.html#cv-section')" class="nav-link">Curriculum Vitae</a>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="social-icons">
+                    <a href="#" class="social-box">FB</a>
+                    <a href="#" class="social-box">IG</a>
+                    <a href="#" class="social-box">YT</a>
+                </div>
+                <div class="copyright">
+                    &copy; 2026 Portfolio Template<br>Xavier University Senior High School
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            
+            <!-- Top Action Bar with Back Button -->
+            <div class="top-action-bar">
+                <a href="index.html#sulatin" onclick="transitionToPage(event, 'index.html#sulatin')" class="back-btn">&larr; Bumalik sa Home</a>
+            </div>
+
+            <!-- Proposal Interactive Layout -->
+            <div class="proposal-container">
+                
+                <!-- Interactive Tabs Bar -->
+                <div class="proposal-tabs-bar">
+                    <button class="proposal-tab active" onclick="switchTab(event, 'tab-1')">I. Abstrak</button>
+                    <button class="proposal-tab" onclick="switchTab(event, 'tab-2')">II. Konteksto</button>
+                    <button class="proposal-tab" onclick="switchTab(event, 'tab-3')">III. Katwiran ng Proyekto</button>
+                    <button class="proposal-tab" onclick="switchTab(event, 'tab-4')">IV. Layunin</button>
+                    <button class="proposal-tab" onclick="switchTab(event, 'tab-5')">V. Target na Benepisyaryo</button>
+                    <button class="proposal-tab" onclick="switchTab(event, 'tab-6')">VI. Implementasyon</button>
+                    <button class="proposal-tab" onclick="switchTab(event, 'tab-7')">VII. Pagmonitor at Ebalwasyon</button>
+                    <button class="proposal-tab" onclick="switchTab(event, 'tab-8')">VIII. Pangasiwaan at Tauhan</button>
+                    <button class="proposal-tab" onclick="switchTab(event, 'tab-9')">IX. Mga Lakip</button>
+                </div>
+
+                <!-- Main White Box Container -->
+                <div class="proposal-content-box">
+                    
+                    <!-- TAB 1: ABSTRAK -->
+                    <div id="tab-1" class="tab-panel active">
+                        <h2 class="section-title">I. Abstrak</h2>
+                        <div class="section-body">
+                            <p>Ang <strong>"PROJECT MALINIS AT LIGTAS: Cogon Market Sanitation Drive"</strong> ay isang inisyatiba ng Sangguniang Kabataan (SK) ng Barangay 33 na naglalayong tugunan ang mababang antas ng kalinisan at kakulangan sa pasilidad ng malinis na tubig sa pampublikong pamilihan ng Cogon, Lungsod ng Cagayan de Oro. Dahil sa mataas na antas ng foot traffic at sikisan ng mga tindero at mamimili, mabilis ang pagkalat ng bakterya at masangsang na amoy sa lugar. Upang masolusyunan ito, maglalagay ang SK ng limang (5) <em>foot-pedal handwashing barrels</em> sa mga pangunahing pasukan ng palengke, magbibigay ng 100 <em>hygiene kits</em> (sabon, apron, at sanitizer) para sa mga nakarehistrong tindero, at magsasagawa ng oryentasyon ukol sa tamang sanitasyon sa paghawak ng pagkain. Ang proyekto ay isasagawa sa loob ng dalawang buwan na may kabuuang iminumungkahing badyet na Php 35,000 mula sa pondo ng SK.</p>
+                        </div>
+                    </div>
+
+                    <!-- TAB 2: KONTEKSTO -->
+                    <div id="tab-2" class="tab-panel">
+                        <h2 class="section-title">II. Konteksto</h2>
+                        <div class="section-body">
+                            <p>Ang Cogon Market ay ang pangunahing sentro ng kalakalan sa Barangay 33 at ang pinakamalaking pampublikong pamilihan sa Lungsod ng Cagayan de Oro. Araw-araw, dinarayo ito ng libu-libong mamimili at daan-daang vendors na nagbebenta ng karne, isda, at gulay. Dahil sa dagsa ng tao at masikip na espasyo sa palengke, nahaharap ang Barangay 33 sa malaking suliranin sa pampublikong kalinisan at sanitasyon.</p>
+                            <p>Sa kasalukuyan, walang maayos at madaling ma-access na libreng pasilidad para sa paghuhugas ng kamay ang mga tindero at mamimili sa mga pangunahing pasukan ng pamilihan. Ang kawalan ito ng maayos na pasilidad ng malinis na tubig, kasabay ng hindi wastong pagtatapon ng mga basurang nagmumula sa palengke, ay nagdudulot ng masangsang na amoy at nagpapataas ng peligro ng pagkalat ng mga nakahahawang sakit at <em>foodborne illnesses</em>. Upang mapanatili ang kaligtasan ng pagkain at kalusugan ng buong komunidad, kinakailangan ang isang direktang interbensyon mula sa Sangguniang Kabataan upang makapagpatayo ng mga angkop na pasilidad sa sanitasyon at makapagbigay ng wastong edukasyon sa mga naghahanapbuhay sa Cogon Market.</p>
+                        </div>
+                    </div>
+
+                    <!-- TAB 3: KATWIRAN NG PROYEKTO -->
+                    <div id="tab-3" class="tab-panel">
+                        <h2 class="section-title">III. Katwiran ng Proyekto</h2>
+                        <div class="section-body">
+                            <h4>A. Suliranin</h4>
+                            <ol>
+                                <li><strong>Kakulangan sa Pasilidad ng Kalinisan:</strong> Sa kasalukuyan, walang simpleng hugasan ng kamay sa paligid ng Cogon Market. Dahil dito, ang mga tindero at mamimili ay napipilitang humawak ng karne, isda, at gulay kahit marumi ang kanilang mga kamay.</li>
+                                <li><strong>Banta sa Kalusugan at Masamang Amoy:</strong> Ang hindi maayos na pagtatapon ng basura ng palengke at ang kawalan ng hugasan ng kamay ay nagdudulot ng mabahong amoy sa lugar. Ito ay mabilis ding nagpapapakalat ng mga nakahahawang sakit sa mga tao.</li>
+                            </ol>
+
+                            <h4>B. Prayoridad na Pangangailangan</h4>
+                            <p>Batay sa masusing pagsusuri sa kalagayan ng Cogon Market, itinuturing na isang pangunahing prayoridad ang agarang paglalagay ng mga accessible at madaling gamiting pasilidad sa paghuhugas ng kamay. Kinakailangan din ang pamamahagi ng mga batayang kagamitang pangkalinisan upang matiyak ang pagsunod sa mga pamantayan ng pampublikong kalusugan at sanitasyon. Ang interbensyong ito ay mahalaga upang maprotektahan ang kapakanan ng mga mamimili at mapanatili ang kaligtasan ng mga pagkain ibinebenta sa pampublikong pamilihan.</p>
+
+                            <h4>C. Interbensyon</h4>
+                            <p>Upang matugunan ang mga nabanggit na suliranin, ang Sangguniang Kabataan (SK) ng Barangay 33 ay magpapatupad ng isang komprehensibong inisyatiba sa sanitasyon. Magtatayo ang SK ng limang (5) <em>hands-free / foot-pedal handwashing barrels</em> sa mga strategic na pasukan ng Cogon Market upang makapaghugas ng kamay ang mga tao nang hindi kailangang humawak sa gripo, na nakatutulong upang maiwasan ang pagkalat ng mikrobyo. Bukod dito, magrerepak at magmamahagi ang SK ng 100 <em>hygiene kits</em> (sabon, apron, at hand sanitizer) sa mga nakarehistrong ambulant at sidewalk vendors. Kasabay nito, magsasagawa ng isang oryentasyon ukol sa tamang sanitasyon sa paghawak ng pagkain at wastong pagtatapon ng basura sa pakikipagtulungan ng mga eksperto sa kalusugan.</p>
+
+                            <h4>D. Mag-iimplementang Organisasyon</h4>
+                            <p>Pangunahing ng Sangguniang Kabataan (SK) ng Barangay 33 ang pamamahala at pagpapatupad ng proyektong ito. Makikipagtulungan ang SK sa Barangay Health Workers (BHW) upang magbigay ng oryentasyon sa kalusugan, at sa Cogon Market Vendor Association upang masigurong aalagaan at gagamitin nang maayos ng mga tindero ang mga hugasan ng kamay.</p>
+                        </div>
+                    </div>
+
+                    <!-- TAB 4: LAYUNIN -->
+                    <div id="tab-4" class="tab-panel">
+                        <h2 class="section-title">IV. Layunin</h2>
+                        <div class="section-body">
+                            <p>Mapataas ang antas ng sanitasyon at mabawasan ang banta ng <em>cross-contamination</em> ng pagkain sa Cogon Market sa pamamagitan ng pagtatayo ng mga pasilidad sa paghuhugas ng kamay, pamamagi ng kagamitang pangkalinisan, at pagbibigay ng edukasyon sa kalusugan sa huling bahagi ng taong 2026.</p>
+                            
+                            <h4>Mga Tiyak na Layunin</h4>
+                            <ol>
+                                <li>Makapagpatayo at makapagkabit ng limang (5) <em>foot-pedal handwashing barrels</em> sa mga pangunahing pasukan ng Cogon Market na malapit sa linya ng tubig at kanal sa loob ng unang dalawang linggo ng proyekto.</li>
+                                <li>Makapamahagi ng 100 <em>hygiene kits</em> (naglalalaman ng apron, hairnet, sabon, at hand sanitizer) sa mga nakarehistrong ambulant at sidewalk vendors sa Barangay 33.</li>
+                                <li>Makapagsagawa ng isang (1) oryentasyon ukol sa wastong paghawak ng pagkain at pampublikong sanitasyon para sa mga tindero sa pakikipagtulungan ng Barangay Health Workers (BHW).</li>
+                                <li>Makabuo ng isang sistema ng lingguhang pagmomonitor at pagpapalit ng sabon sa pakikipagtulungan ng Cogon Market Vendor Association upang matiyak ang tuloy-tuloy na paggamit ng mga hugasan sa loob ng dalawang buwan.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <!-- TAB 5: TARGET NA BENEPISYARYO -->
+                    <div id="tab-5" class="tab-panel">
+                        <h2 class="section-title">V. Target na Benepisyaryo</h2>
+                        <div class="section-body">
+                            <p><strong>Pangunahing Benepisyaryo:</strong> Ang 100 nakarehistrong ambulant at sidewalk vendors ng Barangay 33 sa Cogon Market. Sila ay direktang makatatanggap ng libreng <em>hygiene kits</em>, makakakuha ng decal stickers para sa kanilang puesto upang tumaas ang tiwala ng mamimili, at makagagamit ng mga bagong <em>foot-pedal handwashing stations</em>.</p>
+                            <p><strong>Pangalawang Benepisyaryo:</strong> Ang libu-libong mamimili at residente ng Lungsod ng Cagayan de Oro na pumupunta araw-araw sa Cogon Market. Makikinabang sila sa mas malinis, ligtas, at maayos na pagproseso ng mga pagkaing kanilang binibili, pati na rin sa pagkakaroon ng libreng hugasan ng kamay sa palengke.</p>
+                        </div>
+                    </div>
+
+                    <!-- TAB 6: IMPLEMENTASYON -->
+                    <div id="tab-6" class="tab-panel">
+                        <h2 class="section-title">VI. Implementasyon ng Proyekto</h2>
+                        <div class="section-body">
+                            <h4>A. Planong Pagkilos</h4>
+                            <p>Gawin ang proyektong ito sa loob ng walong linggo sa huling bahagi ng taong 2026. Sa unang linggo, kakausapin ang mga lider ng tindero sa Cogon Market at bibilihin ang mga drum, gripo, piyesa para sa pedal, at mga gamit para sa 100 hygiene kits at stickers. Sa ikalawang linggo, bubuoin ang limang foot-pedal na hugasan ng kamay at ikakabit ang mga ito sa limang pasukan ng palengke na malapit sa linya ng tubig at kanal. Sa ikatlong linggo, pupuntahan ng mga Barangay Health Worker at SK volunteers ang bawat puesto sa mga oras na konti ang tao para sa mabilisang 10-minutong usapan tungkol sa kalinisan, kasabay ng pamimigay ng libreng hygiene kits at stickers. Sa ika-apat hanggang ikawalong linggo, magpapatuloy ang lingguhang pagtingin sa mga hugasan at paglalagay ng bagong sabon kasama ang mga lider ng tindero.</p>
+
+                            <h4>B. Alokasyon ng Tao at Gamit</h4>
+                            <p>Hahatiin ang mga gamit at tao sa tatlong bahagi. Una, ang limang foot-pedal na hugasan ay ilalagay sa limang pasukan ng Cogon Market na may gripo para madaling lagyan ng tubig at malapit sa kanal para hindi bumaha ang paligid. Pangalawa, ang 100 hygiene kits at stickers ay para lamang sa mga nakarehistrong tindero sa kalsada at bangketa ng Barangay 33 na gustong makinig sa mabilisang usapan sa kalinisan. Pangatlo, ang mga Barangay Health Worker at SK volunteers ang mag-iikot sa mga puesto ng tindero, habang ang mga lider ng tindero ang magbabantay at maglalagay ng sabon sa mga hugasan araw-araw.</p>
+
+                            <h4>C. Badyet at Gastusin</h4>
+                            <p>Ang kabuuang Php 35,000 na badyet ay hahatiin sa apat na bahagi. Ang Php 14,000 ay gagamitin sa pagbili ng mga drum, tubo, pedal, at gripo para sa limang hugasan. Ang Php 14,000 ay para sa 100 hygiene kits at tote bags na may laman na apron, hairnet, dalawang sabon, at hand sanitizer. Ang Php 4,000 ay para sa paggawa ng mga Malinis at Ligtas na Tindahan stickers, sertipiko, at meryenda habang nag-iikot. Ang natitirang Php 3,000 ay hahatiin sa Php 2,000 para sa tulong-pamasahe o allowance ng mga volunteers at BHW, at Php 1,000 bilang tabi na pera kung sakaling may kailangang ayusin o palitang piyesa.</p>
+
+                            <table class="budget-table">
+                                <thead>
+                                    <tr>
+                                        <th>AYTEM</th>
+                                        <th>GASTOS</th>
+                                        <th>KARAMIHAN</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><em>Washing Station</em></td>
+                                        <td>₱14,000</td>
+                                        <td>5pcs.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><em>Personal Protective Equipment</em> (Apron, Gloves, Masks, etc.)</td>
+                                        <td>₱14,000</td>
+                                        <td>100pcs bawat piraso.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Materyales sa Kampanya at Insentibo</td>
+                                        <td>₱4,000</td>
+                                        <td>Para sa 100 na tindahan (o kung ilang tindahan ang iikutan)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tulong-Pamasahe at Allowance ng mga Boluntir</td>
+                                        <td>₱2,000</td>
+                                        <td>Para sa mga BHW at SK Volunteers</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pondo sa Pagpapanatili at Pag-repara</td>
+                                        <td>₱1,000</td>
+                                        <td>Kontingensiya para sa mga piyesa</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Kabuuang Badyet</strong></td>
+                                        <td><strong>₱35,000</strong></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- TAB 7: PAGMONITOR AT EBALWASYON -->
+                    <div id="tab-7" class="tab-panel">
+                        <h2 class="section-title">VII. Pagmonitor at Ebalwasyon</h2>
+                        <div class="section-body">
+                            <h4>A. Sistema ng Pagmomonitor</h4>
+                            <p>Magsasagawa ng lingguhang pagmomonitor ang SK Youth Volunteers at Barangay Health Workers sa loob ng dalawang buwan sa Cogon Market. Sa bawat pagbisita, gagamit sila ng simpleng checklist upang tingnan kung buo at gumagana ang limang foot-pedal na hugasan, kung may sapat na tubig at sabon, at kung ginamit ng mga tindero ang kanilang mga ibinigay na hygiene kit at stickers. Itatala rin sa checklist kung may mga sirang piyesa tulad ng gripo o pedal upang agad itong maipaayos gamit ang pondo ng proyekto. Ang mga ulat mula sa pagmomonitor ay isusumite sa Barangay Council at sa lider ng Cogon Market Vendor Association bawat katapusan ng buwan.</p>
+
+                            <h4>B. Pagpapanatili (Sustainability)</h4>
+                            <p>Upang mapanatiling gumagana ang proyekto kahit matapos na ang dalawang buwan, opisyal na ililipat ang pang-araw-araw na pangangalaga at paglalagay ng sabon sa mga lider ng Cogon Market Vendor Association. Ang barangay at SK naman ang mamamahala sa pag-aayos ng mga sirang tubo o gripo gamit ang contingency fund o pondo ng barangay para sa maintenance. Sa pamamagitan ng pagtutulungang ito, masisigurong magagamit ng komunidad ang mga hugasan sa mahabang panahon.</p>
+                        </div>
+                    </div>
+
+                    <!-- TAB 8: PANGASIWAAN AT TAUHAN -->
+                    <div id="tab-8" class="tab-panel">
+                        <h2 class="section-title">VIII. Pangasiwaan at Tauhan</h2>
+                        <div class="section-body">
+                            <p>Ang proyektong ito ay pinangunahan ng SK ng Barangay 33 kasama ang iba pang tulong sa komunidad. Ang SK Chairperson at mga Konsehal ang mamamahala sa buong proyekto, sa pag-aayos ng pera, at sa pakikipag-usap sa mga lider ng Cogon Market. Ang SK Logistics Committee naman ang bibili ng mga drum, gripo, at mga gamit para sa 100 hygiene kits at stickers. Ang mga Barangay Health Worker at SK Youth Volunteers ang mag-iikot sa palengke para sa mabilisang usapan tungkol sa kalinisan at pamimigay ng libreng hygiene kits. Ang mga lider naman ng mga tindero sa Cogon Market ang magbabantay sa limang hugasan araw-araw at maglalagay ng sabon sa kani-kanilang lugar.</p>
+                        </div>
+                    </div>
+
+                    <!-- TAB 9: MGA LAKIP -->
+                    <div id="tab-9" class="tab-panel">
+                        <h2 class="section-title">IX. Mga Lakip</h2>
+                        <div class="section-body">
+                            <h4>A. Dokumentasyon</h4>
+                            <div class="image-gallery">
+                                <div class="image-card">
+                                    <img src="scaffold3-1.jpg" alt="Hygiene Kit Distribution">
+                                </div>
+                                <div class="image-card">
+                                    <img src="scaffold3-2.jpg" alt="Handwashing Station Installation">
+                                </div>
+                            </div>
+
+                            <h4>B. Reperensya</h4>
+                            <ul>
+                                <li>Barangay 33 Sangguniang Kabataan. (2024). <em>Comprehensive Youth Development Plan (CYDP) 2024–2026</em>. Lungsod ng Cagayan de Oro.</li>
+                                <li>Department of Health. (2020). <em>Guidelines on sanitation and handwashing in public markets</em>. Department of Health Philippines.</li>
+                                <li>Department of the Interior and Local Government. (2018). <em>Sangguniang Kabataan reform act of 2015: Resource guide for local youth development</em>. DILG.</li>
+                                <li>World Health Organization. (2020). <em>Water, sanitation, hygiene, and waste management for public health emergencies</em>. World Health Organization.</li>
+                                <li>UNICEF Philippines. (2020, September 9). <em>Families heavily affected by COVID-19 receive hygiene kits</em>. UNICEF.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        function transitionToPage(event, url) {
+            event.preventDefault();
+            document.body.classList.add('fade-out');
+            setTimeout(() => {
+                window.location.href = url;
+            }, 300);
+        }
+
+        /* Interactive Tab Switching Logic */
+        function switchTab(event, tabId) {
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.proposal-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Hide all tab panels
+            const panels = document.querySelectorAll('.tab-panel');
+            panels.forEach(panel => panel.classList.remove('active'));
+
+            // Activate clicked tab
+            event.currentTarget.classList.add('active');
+
+            // Show target panel
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        /* Rising Yellow Blocky Particles Canvas Animation */
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const particleColors = ['#facc15', '#eab308', '#fbbf24', '#d97706', '#e2e8f0'];
+
+        class DynamicParticle {
+            constructor() {
+                this.reset(true);
+            }
+
+            reset(initial = false) {
+                this.x = Math.random() * width;
+                this.y = initial ? Math.random() * height : height + Math.random() * 80;
+                this.w = Math.random() * 30 + 12;
+                this.h = Math.random() * 10 + 4;
+                this.speedY = Math.random() * 1.5 + 0.6;
+                this.speedX = Math.random() * 0.5 + 0.2;
+                this.color = particleColors[Math.floor(Math.random() * particleColors.length)];
+                this.opacity = Math.random() * 0.55 + 0.25;
+                this.type = Math.floor(Math.random() * 3);
+            }
+
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX;
+                if (this.y < -50 || this.x > width + 50) {
+                    this.reset(false);
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.opacity;
+                ctx.translate(this.x, this.y);
+
+                if (this.type === 0) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0); ctx.lineTo(this.w, 0); ctx.lineTo(this.w - 12, this.h); ctx.lineTo(-12, this.h); ctx.closePath(); ctx.fill();
+                } else if (this.type === 1) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0); ctx.lineTo(this.w / 1.5, -this.h / 1.2); ctx.lineTo(this.w, this.h / 2); ctx.closePath(); ctx.fill();
+                } else {
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0); ctx.lineTo(this.w * 1.8, -this.h * 0.5); ctx.lineTo(this.w * 1.8 - 6, 2); ctx.lineTo(-6, 2); ctx.closePath(); ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        const particles = Array.from({ length: 45 }, () => new DynamicParticle());
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateParticles);
+        }
+
+        animateParticles();
+    </script>
+</body>
+</html>

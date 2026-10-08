@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scaffold 1 - Pagsusuri ng Teksto</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:ital,wght@0,400;0,600;0,700;1,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fcfcfc;
+            color: #111111;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            animation: fadeInPage 0.4s ease-out forwards;
+            opacity: 0;
+            position: relative;
+        }
+
+        body.fade-out {
+            animation: fadeOutPage 0.3s ease-in forwards;
+        }
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeOutPage {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+
+        /* Canvas Overlay for Dynamic Blocky Yellow Particles */
+        #particleCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* UST Style Split Title */
+        .ust-split-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-style: italic;
+            text-transform: uppercase;
+            display: inline-block;
+            letter-spacing: 1px;
+            line-height: 1.1;
+            background: linear-gradient(to bottom, #eab308 0%, #eab308 50%, #111111 50%, #111111 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* TABS Custom Typography */
+        .tabs-split-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-style: italic;
+            font-size: 2.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            display: inline-block;
+            line-height: 1.1;
+            background: linear-gradient(to bottom, #ffffff 0%, #ffffff 50%, #111111 50%, #111111 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            z-index: 20;
+            -webkit-text-stroke: 1.2px #111111;
+            filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.2));
+        }
+
+        /* Main App Layout */
+        .app-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            border-right: 2px solid #111111;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 0 0 40px 0;
+            z-index: 10;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-area {
+            position: relative;
+            z-index: 20;
+            height: 140px;
+            width: 100%;
+            overflow: hidden;
+            border-bottom: 3px solid #111111;
+            display: flex;
+            align-items: center;
+            padding-left: 24px;
+        }
+
+        .corner-graphic-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: auto 0;
+            padding: 0 30px;
+            position: relative;
+            z-index: 12;
+        }
+
+        .nav-link {
+            font-family: 'Space Grotesk', sans-serif;
+            text-decoration: none;
+            color: #111111;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 8px 12px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: #111111;
+            color: #ffffff;
+        }
+
+        .sidebar-footer {
+            border-top: 2px solid #111111;
+            padding: 20px 30px 0 30px;
+            position: relative;
+            z-index: 12;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .social-box {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #111111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: #111111;
+        }
+
+        .social-box:hover {
+            background: #111111;
+            color: #ffffff;
+        }
+
+        .copyright {
+            font-size: 0.75rem;
+            color: #666666;
+            line-height: 1.4;
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scaffold-document-box {
+            width: 100%;
+            max-width: 1150px;
+            height: 92vh;
+            background: #ffffff;
+            border: 3px solid #111111;
+            box-shadow: 10px 10px 0px #111111;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .document-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #111111;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+            flex-shrink: 0;
+        }
+
+        .back-btn {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #111111;
+            background: #ffffff;
+            border: 2px solid #111111;
+            padding: 8px 16px;
+            box-shadow: 3px 3px 0px #111111;
+            transition: all 0.15s ease;
+        }
+
+        .back-btn:hover {
+            background: #111111;
+            color: #ffffff;
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0px #111111;
+        }
+
+        /* Side-by-Side Main Boxes Container */
+        .qa-side-by-side-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .main-box {
+            border: 3px solid #111111;
+            background: #f4f4f5;
+            box-shadow: 5px 5px 0px #111111;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .sub-box-question {
+            background: #18181b;
+            color: #f4f4f5;
+            padding: 16px 18px;
+            border-bottom: 3px solid #111111;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            flex-shrink: 0;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+        }
+
+        .sub-box-answer {
+            background: #ffffff;
+            color: #222222;
+            padding: 20px;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .sub-box-answer p {
+            margin-bottom: 12px;
+        }
+        .sub-box-answer p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Custom Scrollbars */
+        .sub-box-answer::-webkit-scrollbar {
+            width: 7px;
+        }
+        .sub-box-answer::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-left: 2px solid #111111;
+        }
+        .sub-box-answer::-webkit-scrollbar-thumb {
+            background: #111111;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Dynamic Animated Particle Canvas -->
+    <canvas id="particleCanvas"></canvas>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="logo-area">
+                <img src="yellow.jpg" alt="Yellow Graphic" class="corner-graphic-img">
+                <h1 class="tabs-split-title">TABS</h1>
+            </div>
+
+            <div class="nav-links">
+                <a href="index.html#pabalat" onclick="transitionToPage(event, 'index.html#pabalat')" class="nav-link">Pabalat</a>
+                <a href="index.html#pamagating" onclick="transitionToPage(event, 'index.html#pamagating')" class="nav-link">Pamagating Pahina</a>
+                <a href="index.html#prologo" onclick="transitionToPage(event, 'index.html#prologo')" class="nav-link">Prologo</a>
+                <a href="index.html#talaan" onclick="transitionToPage(event, 'index.html#talaan')" class="nav-link">Talaan ng Nilalaman</a>
+                <a href="index.html#sulatin" onclick="transitionToPage(event, 'index.html#sulatin')" class="nav-link active">Mga Sulatin</a>
+                <a href="index.html#epilogo" onclick="transitionToPage(event, 'index.html#epilogo')" class="nav-link">Epilogo</a>
+                <a href="index.html#cv-section" onclick="transitionToPage(event, 'index.html#cv-section')" class="nav-link">Curriculum Vitae</a>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="social-icons">
+                    <a href="#" class="social-box">FB</a>
+                    <a href="#" class="social-box">IG</a>
+                    <a href="#" class="social-box">YT</a>
+                </div>
+                <div class="copyright">
+                    &copy; 2026 Portfolio Template<br>Xavier University Senior High School
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <div class="scaffold-document-box">
+                <div class="document-header">
+                    <div>
+                        <span style="font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; background: #eab308; border: 2px solid #111111; padding: 2px 8px; text-transform: uppercase;">Scaffold 1</span>
+                        <h2 class="ust-split-title" style="font-size: 1.8rem; display: block; margin-top: 6px;">Pagsusuri ng Teksto</h2>
+                    </div>
+                    <a href="index.html#sulatin" onclick="transitionToPage(event, 'index.html#sulatin')" class="back-btn">&larr; Bumalik</a>
+                </div>
+
+                <!-- Two Main Boxes Side-by-Side Grid -->
+                <div class="qa-side-by-side-grid">
+                    
+                    <!-- Main Box 1 (Question 1 & Answer 1) -->
+                    <div class="main-box">
+                        <div class="sub-box-question">
+                            1. Bakit mahalagang matukoy ang uri ng sulatin sa pagbasa at pagsusuri ng mga akademikong teksto?
+                        </div>
+                        <div class="sub-box-answer">
+                            <p>Ang pagtukoy sa uri ng sulatin ay isang mahalagang hakbang sa pagbasa at pagsusuri ng mga akademikong teksto. Bawat uri ng sulatin ay may natatanging layunin, estruktura, at paraan ng paglalahad ng impormasyon. Dahil dito, nagkakaroon ang mambabasa ng mas malinaw na direksiyon kung paano niya uunawain at susuriin ang teksto. Hindi lamang nito pinadadali ang pagkuha ng impormasyon, kundi nakatutulong din ito sa paglinang ng mas malalim na pag-unawa at kritikal na pag-iisip.</p>
+                            <p>Napakahalagang matukoy ang uri ng sulatin dahil agad nitong inilalantad ang layunin, pananaw, at gustong ipahayag ng may-akda sa mga mambabasa. Sa pamamagitan nito, mas nauunawaan kung bakit isinulat ang teksto at kung anong mensahe ang nais nitong ipabatid. Halimbawa, kung ang isang teksto ay feasibility study, inaasahang naglalaman ito ng masusing pagsusuri sa teknikal, pinansyal, at operasyonal na aspeto ng isang proyekto upang matukoy kung ito ay praktikal at kapaki-pakinabang na isagawa. Samantala, kung ito ay impormatibong teksto, nakatuon ito sa paglalahad ng mga datos at katotohanang nagbibigay-kaalaman, habang ang naratibong sulatin naman ay naglalahad ng mga pangyayari o karanasan sa paraang kronolohikal o masining. Sa pagkilala sa mga uring ito, mas madaling matutukoy ng mambabasa ang layunin, estruktura, at paraan ng paglalahad ng impormasyon ng akademikong teksto, kaya nagiging mas epektibo ang pagbasa at pagsusuri nito.</p>
+                            <p>Bukod dito, nagsisilbi rin itong gabay sa pagpili ng mga angkop na estratehiya sa pagbasa at pagsusuri. Ang bawat uri ng sulatin ay nangangailangan ng magkaibang paraan ng pag-aanalisa upang lubos na maunawaan ang nilalaman nito. Kapag natukoy ang uri ng teksto, mas nagiging malinaw ang organisasyon ng mga ideya, ang pagkakaugnay-ugnay ng impormasyon, at ang mga ebidensiyang ginamit ng may-akda. Dahil dito, mas nagiging sistematiko at masusing nasusuri ang teksto sa halip na basta lamang basahin ito.</p>
+                            <p>Sa kabuuan, ang pagkilala sa uri ng sulatin ay mahalaga sapagkat ito ang nagsisilbing pundasyon ng epektibong pagbasa at kritikal na pagsusuri. Pinahuhusay nito ang kakayahan ng mambabasa na maunawaan ang layunin, nilalaman, at organisasyon ng teksto, habang tinutulungan siyang pumili ng angkop na paraan ng pagsusuri. Sa pamamagitan nito, nagiging mas makabuluhan, mas tumpak, at mas kritikal ang pag-unawa sa mga akademikong teksto.</p>
+                        </div>
+                    </div>
+
+                    <!-- Main Box 2 (Question 2 & Answer 2) -->
+                    <div class="main-box">
+                        <div class="sub-box-question">
+                            2. Paano ka makalilikha ng isang sariling sulatin na nagtatampok ng kamalayang panlipunan at naglilinang sa pagpapahalaga sa kultura?
+                        </div>
+                        <div class="sub-box-answer">
+                            <p>Ang paglikha ng isang sulatin na nagtatampok ng kamalayang panlipunan at pagpapahalaga sa kultura ay nangangailangan ng masusing paghahanda, sapat na kaalaman, at pagiging responsable sa paglalahad ng impormasyon. Bilang isang manunulat, mahalagang maunawaan na ang bawat sulatin ay may kakayahang makaimpluwensiya sa pananaw at pag-unawa ng mga mambabasa. Dahil dito, nararapat lamang na ang ating mga akda ay maging tapat sa katotohanan, may paggalang sa iba't ibang kultura, at may layuning makapagbigay ng positibong ambag sa lipunan upang hindi ito dumagdag sa mga problemang hinaharap ng ating komunidad kundi makatutulong sa pagbibigay ng solusyon sa mga ito.</p>
+                            <p>Makalilikha tayo ng ganitong uri ng sulatin sa pamamagitan ng pagkakaroon muna ng sapat na kaalaman tungkol sa paksang tatalakayin. Mahalaga ang pagsasagawa ng masusing pananaliksik gamit ang mapagkakatiwalaang sanggunian upang matiyak ang katumpakan, pagiging napapanahon, at pagiging makatotohanan ng impormasyong ilalahad. Sa ganitong paraan, naiiwasan ang pagkalat ng maling impormasyon at napananatili ang kredibilidad ng sulatin.</p>
+                            <p>Bukod sa pananaliksik, mahalaga ring maging bukas ang isipan at magkaroon ng paggalang sa iba't ibang kultura, tradisyon, at paniniwala. Dapat iwasan ng manunulat ang paggamit ng mga stereotype, labis na paglalahat, at personal na pagkiling na maaaring magbigay ng maling representasyon sa isang komunidad o pangkat ng mga tao. Kung maaari, makabubuting isama ang tunay na karanasan, pananaw, o tinig ng mga taong kabilang sa kulturang tinatalakay upang maging mas makatotohanan, makabuluhan, at kapani-paniwala ang sulatin. Higit sa lahat, dapat na maipakita sa bawat bahagi ng akda ang empatiya, paggalang, at pagpapahalaga sa pagkakaiba-iba ng mga kultura upang maisulong ang pagkakaisa at pag-unawa sa lipunan.</p>
+                            <p>Sa huli, ang isang sulating nagtatampok ng kamalayang panlipunan at pagpapahalaga sa kultura ay hindi lamang nagsisilbing daluyan ng impormasyon kundi nagiging kasangkapan din sa pagpapalaganap ng paggalang, pagkakapantay-pantay, at pagkakaunawaan sa lipunan. Sa pamamagitan ng masusing pananaliksik, responsableng pagsulat, at pagpapakita ng empatiya sa iba't ibang kultura, makalilikha tayo ng mga akdang hindi lamang nagbibigay-kaalaman kundi nagiging inspirasyon din upang pahalagahan ng bawat isa ang sariling kultura habang iginagalang ang kultura at pagkakakilanlan ng iba.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        function transitionToPage(event, url) {
+            event.preventDefault();
+            document.body.classList.add('fade-out');
+            setTimeout(() => {
+                window.location.href = url;
+            }, 300);
+        }
+
+        /* Rising Yellow Blocky Particles Canvas Animation */
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const particleColors = ['#facc15', '#eab308', '#fbbf24', '#d97706', '#e2e8f0'];
+
+        class DynamicParticle {
+            constructor() {
+                this.reset(true);
+            }
+
+            reset(initial = false) {
+                this.x = Math.random() * width;
+                this.y = initial ? Math.random() * height : height + Math.random() * 80;
+                this.w = Math.random() * 30 + 12;
+                this.h = Math.random() * 10 + 4;
+                this.speedY = Math.random() * 1.5 + 0.6;
+                this.speedX = Math.random() * 0.5 + 0.2;
+                this.color = particleColors[Math.floor(Math.random() * particleColors.length)];
+                this.opacity = Math.random() * 0.55 + 0.25;
+                this.type = Math.floor(Math.random() * 3);
+            }
+
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX;
+                if (this.y < -50 || this.x > width + 50) {
+                    this.reset(false);
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.opacity;
+                ctx.translate(this.x, this.y);
+
+                if (this.type === 0) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0); ctx.lineTo(this.w, 0); ctx.lineTo(this.w - 12, this.h); ctx.lineTo(-12, this.h); ctx.closePath(); ctx.fill();
+                } else if (this.type === 1) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0); ctx.lineTo(this.w / 1.5, -this.h / 1.2); ctx.lineTo(this.w, this.h / 2); ctx.closePath(); ctx.fill();
+                } else {
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0); ctx.lineTo(this.w * 1.8, -this.h * 0.5); ctx.lineTo(this.w * 1.8 - 6, 2); ctx.lineTo(-6, 2); ctx.closePath(); ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        const particles = Array.from({ length: 45 }, () => new DynamicParticle());
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateParticles);
+        }
+
+        animateParticles();
+    </script>
+</body>
+</html>
